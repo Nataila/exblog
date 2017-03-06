@@ -5,12 +5,18 @@ block content
       .form-group
         label.col-sm-2.control-label 标题
         .col-sm-9
-          input.form-control(type="text" name="title" placeholder="标题")
+          - if (post)
+            input.form-control(type="text" name="title" placeholder="标题" value=post.title)
+          - else
+            input.form-control(type="text" name="title" placeholder="标题")
       .form-group
         label.col-sm-2.control-label 正文
         .col-sm-9
           #content-editormd
-            textarea(style="display:none;" name="content")
+            - if (post)
+              textarea(style="display:none;" name="content") #{post.content}
+            - else
+              textarea(style="display:none;" name="content")
       .form-group
         label.col-sm-2.control-label 标签
         .col-sm-9
