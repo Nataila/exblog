@@ -1,0 +1,4 @@
+root = true
+[*.{js,less,css,jade,json,pug,sass,less}]
+indent_style = space
+indent_size = 2
