@@ -1,7 +1,7 @@
 extends ../base
 block content
   .container-build
-    form.form-horizontal(method="post")
+    form.form-horizontal#post-form(method="post")
       .form-group
         label.col-sm-2.control-label 标题
         .col-sm-9
@@ -10,15 +10,15 @@ block content
         label.col-sm-2.control-label 正文
         .col-sm-9
           #content-editormd
-            textarea(style="display:none;")
+            textarea(style="display:none;" name="content")
       .form-group
         label.col-sm-2.control-label 标签
         .col-sm-9
-          select.form-control(name="tag" multiple)
+          select.form-control(name="tags" multiple)
             option 1
             option 2
             option 3
             option 4
       .form-group
         .col-sm-9.col-sm-offset-2
-          button.btn.btn-default(type="submit") 提交
+          button.btn.btn-default.post-sub(type="button") 提交

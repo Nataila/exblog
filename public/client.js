@@ -9,4 +9,8 @@ $(() => {
     syncScrolling: "single",
     path: "../plugins/editor.md/js/lib/"
   });
+
+  $('.post-sub').on('click', ()=> {
+    $('#post-form').submit()
+  });
 });
