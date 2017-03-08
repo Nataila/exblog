@@ -1,4 +1,8 @@
 extends ../base
+block script-file
+  script(src="/plugins/editor.md/js/editormd.js")
+block css-file
+  link(rel="stylesheet", href="/plugins/editor.md/css/editormd.css")
 block content
   .container-build
     form.form-horizontal#post-form(method="post")
@@ -14,9 +18,9 @@ block content
         .col-sm-9
           #content-editormd
             - if (post)
-              textarea(style="display:none;" name="content") #{post.content}
+              textarea(style="display:none;" name="markdown") #{post.markdown}
             - else
-              textarea(style="display:none;" name="content")
+              textarea(style="display:none;" name="markdown")
       .form-group
         label.col-sm-2.control-label 标签
         .col-sm-9
@@ -27,4 +31,15 @@ block content
             option 4
       .form-group
         .col-sm-9.col-sm-offset-2
-          button.btn.btn-default.post-sub(type="button") 提交
+          button.btn.btn-default.post-sub(type="submit") 提交
+
+  script.
+    var testEditor;
+    $(function() {
+      testEditor = editormd("content-editormd", {
+        width: "100%",
+        height: 640,
+        syncScrolling: "single",
+        path: "../plugins/editor.md/js/lib/",
+      });
+    });

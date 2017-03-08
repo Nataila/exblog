@@ -16,7 +16,7 @@ router.get('/post', (req, res) => {
 router.post('/post', (req, res) => {
   let new_post = new models.PostModel({
     title: req.body.title,
-    content: req.body.content,
+    markdown: req.body.markdown,
     tags: req.body.tags
   });
   new_post.save((err, post) => {

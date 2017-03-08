@@ -32,7 +32,7 @@ const TagsSchema = new mongoose.Schema({
 // 文章表
 const PostSchema = new mongoose.Schema({
   title: {type: String, required: true},
-  content: {type: String, required: true},
+  markdown: {type: String, required: true},
   // tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tags'}],
   tags: [{type: String}],
   created_at: {type: Date, default: Date.now}

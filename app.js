@@ -11,6 +11,7 @@ import routes from './routes/index';
 import config from './config';
 import users from './routes/users';
 import admin from './routes/admin';
+import post from './routes/post';
 
 var app = express();
 
@@ -40,6 +41,7 @@ app.use(flash());
 app.use('/', routes);
 app.use('/users', users);
 app.use('/admin', admin);
+app.use('/post', post);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
