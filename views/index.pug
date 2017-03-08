@@ -14,4 +14,8 @@ block content
       .col-md-10
         .post-list
           each post in posts
-            li #{post.title}
+            .post
+              .post-header
+                a(href="") #{post.title}
+              .post-body
+              .post-footer
