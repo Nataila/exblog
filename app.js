@@ -26,6 +26,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
+// 由于webpack打包后生成图片和客户端引入图片位置冲突，所以加一个静态资源路径
+app.use(express.static(path.join(__dirname, '.')));
 
 app.use(session({
   name: 'sid',

@@ -24,11 +24,11 @@ function checkNotLogin(req, res, next) {
 }
 
 router.get('/', function(req, res, next) {
-  res.render('index', {
-    title: 'Express',
-    user: req.session.user,
-    success: req.flash('success').toString(),
-    error: req.flash('error').toString()
+  let result = {'title': '大表哥'};
+  let posts = models.PostModel.find();
+  posts.then((posts) => {
+    result.posts = posts;
+    res.render('index', result);
   });
 });
 

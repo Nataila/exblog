@@ -1,18 +1,14 @@
 extends base
 
 block content
-  h1 大表哥的个人博客
-
-  nav
-    span
-      a(href='/') 主页
-    span
-      a(href='/login') 登陆
-    span
-      a(href='/logout') 注销
-
-  button.btn.btn-primary 走你
-  if (success)
-    span= success
-  if (user)
-    span= user.name
+  .page
+    .container-build
+      .head-box
+        .banner
+          div.search-fa.col-md-6.col-md-offset-3
+            form.search(method="get")
+              input.form-control.search-input(type="text" name="search")
+    .container
+      .col-md-10
+        each post in posts
+          li #{post.title}
