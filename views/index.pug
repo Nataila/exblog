@@ -5,10 +5,13 @@ block content
     .container-build
       .head-box
         .banner
+          div.title.tc #{title}
           div.search-fa.col-md-6.col-md-offset-3
             form.search(method="get")
               input.form-control.search-input(type="text" name="search")
+              button.glyphicon.glyphicon-search(type="submit" aria-hidden="true")
     .container
       .col-md-10
-        each post in posts
-          li #{post.title}
+        .post-list
+          each post in posts
+            li #{post.title}
