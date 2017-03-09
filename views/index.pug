@@ -20,7 +20,7 @@ block content
           each post in posts
             .post
               .post-header
-                a.title-a(href="/detail/" + post._id) #{post.title}
+                a.title-a(href="/post/detail/" + post._id) #{post.title}
                 - if (user) {
                   span.admin-operate
                     a.edit.ex-badge(href='/admin/post/edit/' + post._id) 编辑

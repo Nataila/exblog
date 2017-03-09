@@ -1,5 +1,7 @@
 extends base
 
+block title
+  | #{post.title}
 block script-file
   script(src="/plugins/editor.md/js/editormd.js")
   script(src="/plugins/editor.md/js/lib/marked.min.js")
@@ -12,10 +14,18 @@ block script-file
 block css-file
   link(rel="stylesheet", href="/plugins/editor.md/css/editormd.css")
 block content
-  .container
-    #test-editormd-view
-      textarea(style="display:none" name="test-editormd-markdown-doc")
-    .markdown-container= post.markdown
+  .detail-main
+    .container
+      .detail-header
+        h2.tc= post.title
+        ul.post-meta
+          li 发表时间：#{post.created_at}
+          li 分类:
+            each tag in post.tags
+             | #{tag}
+      #test-editormd-view
+        textarea(style="display:none" name="test-editormd-markdown-doc")
+      .markdown-container= post.markdown
 
   script.
     var markdown = $('.markdown-container').text();

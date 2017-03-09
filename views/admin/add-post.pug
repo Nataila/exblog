@@ -35,7 +35,7 @@ block content
                 textarea(style="display:none;" name="markdown")
         .form-group
           label.col-sm-1.control-label 标签
-          .col-sm-10
+          .col-sm-3
             select.form-control(name="tags" multiple)
               option 1
               option 2
@@ -47,8 +47,10 @@ block content
         - else
           input(type="hidden" name="type" value="new")
         .form-group
-          .col-sm-10.col-sm-offset-1
+          .col-sm-1.col-sm-offset-1
             button.btn.btn-default.post-sub(type="submit") 提交
+          .col-sm-1
+            span.btn.btn-primary 标签管理
 
   script.
     var testEditor;

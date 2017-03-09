@@ -2,7 +2,6 @@ import crypto from 'crypto';
 import express from 'express';
 import models from '../models';
 import config from '../config';
-import md from 'marked';
 
 var router = express.Router();
 
@@ -26,7 +25,7 @@ function checkNotLogin(req, res, next) {
 
 
 router.get('/', function(req, res, next) {
-  let result = {'title': '大表哥', 'md': md};
+  let result = {'title': '大表哥'};
   let posts = models.PostModel.find();
   posts.then((posts) => {
     result.user = req.session.user;
@@ -90,11 +89,11 @@ router.post('/login', function (req, res, next) {
 //     res.redirect('/');
 //   });
 // });
-
-router.get('/logout', function (req, res, next) {
-  req.session.user = null;
-  req.flash('success', '注销成功');
-  res.redirect('/');
-});
+// 
+// router.get('/logout', function (req, res, next) {
+//   req.session.user = null;
+//   req.flash('success', '注销成功');
+//   res.redirect('/');
+// });
 
 module.exports = router;

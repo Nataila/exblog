@@ -5,13 +5,14 @@ import auth from '../auth';
 var router = express.Router();
 
 router.get('/', auth.login_required, (req, res, next) => {
-  res.render('admin/dashboard', {
-    name: 'cc'
-  });
+  res.render('admin/dashboard', {});
 });
 
 router.get('/post/new', auth.login_required, (req, res) => {
-  res.render('admin/add-post', {
+  models.TagsModel.find({}, (err, doc) => {
+    res.render('admin/add-post', {
+      tags: doc
+    });
   });
 });
 
@@ -35,7 +36,7 @@ router.post('/post', auth.login_required,  (req, res) => {
   let save_promise;
   if (type === 'new') {
     save_promise = new Promise((resolve, reject) => {
-      let new_post = new models.PostModel();
+      let new_post = new models.PostModel(post_d);
       new_post.save((err, post) => {
         if (err) {
           reject(new Error('error'));
@@ -55,7 +56,7 @@ router.post('/post', auth.login_required,  (req, res) => {
     });
   }
   save_promise.then((post) => {
-    res.render('admin/add-post', {});
+    return res.redirect(`/post/detail/${post._id}`);
   });
 });
 

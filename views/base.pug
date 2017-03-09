@@ -10,5 +10,13 @@ html
     block script-file
     block css-file
   body
+    .navbar.navbar-inverse.navbar-fixed-top.ex-navbar
+      .container
+        .navbar-header
+          a.navbar-brand.hidden-sm(href="/") 大表哥的博客
+        .navbar-collapse.collapse(role="navigation")
+          ul.nav.navbar-nav
+            li.hidden-sm.hidden-md
+              a(href="/") 博文
     block content
     script(src="/client.js")
