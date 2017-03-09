@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import express from 'express';
 import models from '../models';
 import config from '../config';
+import md from 'marked';
 
 var router = express.Router();
 
@@ -23,15 +24,18 @@ function checkNotLogin(req, res, next) {
   next();
 }
 
+
 router.get('/', function(req, res, next) {
-  let result = {'title': '大表哥'};
+  let result = {'title': '大表哥', 'md': md};
   let posts = models.PostModel.find();
   posts.then((posts) => {
+    result.user = req.session.user;
     result.posts = posts;
     res.render('index', result);
   });
 });
 
+router.get('/login', checkNotLogin);
 router.get('/login', function (req, res, next) {
   res.render('login', {
     welcome_text: config.welcome_text,
@@ -56,7 +60,7 @@ router.post('/login', function (req, res, next) {
     }
     req.session.user = user;
     req.flash('success', '登陆成功');
-    res.redirect('/post');
+    res.redirect('/admin');
   });
 });
 

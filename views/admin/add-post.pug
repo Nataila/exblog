@@ -1,45 +1,63 @@
 extends ../base
+block title
+  - if (type)
+    | 编辑文章
+  - else
+    | 发表文章
 block script-file
   script(src="/plugins/editor.md/js/editormd.js")
 block css-file
   link(rel="stylesheet", href="/plugins/editor.md/css/editormd.css")
 block content
-  .container-build
-    form.form-horizontal#post-form(method="post")
-      .form-group
-        label.col-sm-2.control-label 标题
-        .col-sm-9
-          - if (post)
-            input.form-control(type="text" name="title" placeholder="标题" value=post.title)
-          - else
-            input.form-control(type="text" name="title" placeholder="标题")
-      .form-group
-        label.col-sm-2.control-label 正文
-        .col-sm-9
-          #content-editormd
+  .page-header
+    .container
+      - if (type)
+        h1.tc 编辑文章
+      - else
+        h1.tc 发表文章
+  .post-add-main
+    .container-build
+      form.form-horizontal#post-form(method="post" action="/admin/post")
+        .form-group
+          label.col-sm-1.control-label 标题
+          .col-sm-10
             - if (post)
-              textarea(style="display:none;" name="markdown") #{post.markdown}
+              input.form-control(type="text" name="title" placeholder="标题" value=post.title)
             - else
-              textarea(style="display:none;" name="markdown")
-      .form-group
-        label.col-sm-2.control-label 标签
-        .col-sm-9
-          select.form-control(name="tags" multiple)
-            option 1
-            option 2
-            option 3
-            option 4
-      .form-group
-        .col-sm-9.col-sm-offset-2
-          button.btn.btn-default.post-sub(type="submit") 提交
+              input.form-control(type="text" name="title" placeholder="标题")
+        .form-group
+          label.col-sm-1.control-label 正文
+          .col-sm-10
+            #content-editormd
+              - if (post)
+                textarea(style="display:none;" name="markdown") #{post.markdown}
+              - else
+                textarea(style="display:none;" name="markdown")
+        .form-group
+          label.col-sm-1.control-label 标签
+          .col-sm-10
+            select.form-control(name="tags" multiple)
+              option 1
+              option 2
+              option 3
+              option 4
+        - if (type)
+          input(type="hidden" name="type" value="edit")
+          input(type="hidden" name="p_id" value=post._id)
+        - else
+          input(type="hidden" name="type" value="new")
+        .form-group
+          .col-sm-10.col-sm-offset-1
+            button.btn.btn-default.post-sub(type="submit") 提交
 
   script.
     var testEditor;
+    var path = "/plugins/editor.md/js/lib/"
     $(function() {
       testEditor = editormd("content-editormd", {
         width: "100%",
         height: 640,
         syncScrolling: "single",
-        path: "../plugins/editor.md/js/lib/",
+        path: path,
       });
     });

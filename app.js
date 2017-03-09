@@ -34,7 +34,7 @@ app.use(session({
   secret: config.cookieSecret,
   resave: true,
   saveUninitialized: false,
-  cookie: {maxAge: 1000 * 10},
+  cookie: {maxAge: 1000 * 60 * 60},
   store: new MongoStore({
     url: 'mongodb://127.0.0.1:27017/exblog'
   })

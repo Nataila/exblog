@@ -1,4 +1,13 @@
-$baseColor: #6c9
+$baseColor: #FF5E52
+.ex-badge
+  color: $baseColor
+  padding: 3px
+  border: 1px solid $baseColor
+  border-radius: 3px
+  transition: all .5s
+  &:hover
+    background-color: $baseColor
+    color: #FFF
 .markdown-container
   display: none
 .head-box
@@ -25,6 +34,7 @@ $baseColor: #6c9
         height: 45px
         font-size: 22px
         background: transparent
+        transition: all .5s
         &:focus
           background: rgba(255,255,255,0.2)
       button.glyphicon-search
@@ -39,13 +49,49 @@ $baseColor: #6c9
         background: transparent
 .post-list
   .post
+    margin-top: 10px
+    background: #FFF
+    border-bottom: 1px solid #eee
     .post-header
       padding: 10px 0
-      a
-        padding-left: 10px;
-        border-left: 2px solid $baseColor
+      .title-a
+        padding-left: 20px
+        border-left: 3px solid $baseColor
         font-size: 24px
         color: #565656
         font-style: normal
         font-weight: 700
         text-decoration: none
+        transition: all .3s
+        &:hover
+          color: $baseColor
+      .admin-operate
+        float: right
+        margin-top: 10px
+        margin-right: 20px
+        font-size: 4px
+        .edit
+          margin-right: 10px
+    .post-footer
+      display: flex
+      justify-content: flex-end
+      border-top: 1px solid #eee
+      padding: 7px
+      div
+        margin-right: 20px
+        .tag-a
+          margin-left: 10px
+    // .post-body
+    //   height: 200px
+    //   padding: 15px
+    //   overflow: hidden
+    //   color: #4d4d4d
+    //   background: #f9f9f9
+    //   border-top: 1px solid #e8e8e8
+    //   border-bottom: 1px solid #e8e8e8
+.new-post
+  margin: 20px 0
+  float: right
+  font-size: 20px
+  .new-post-a
+    padding: 5px 15px

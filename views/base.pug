@@ -2,7 +2,9 @@ doctype html
 html
   head
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    title= title
+    title
+      block title
+        | #{title}
     script(src="/plugins/jquery/jquery.js")
     script(src="/plugins/bootstrap/js/bootstrap.js")
     block script-file

@@ -12,10 +12,23 @@ block content
               button.glyphicon.glyphicon-search(type="submit" aria-hidden="true")
     .container
       .col-md-10
-        .post-list
+        - if (user) {
+        div.new-post
+          a.ex-badge.new-post-a(href="/admin/post/new") 发表新文章
+        - }
+        .post-list.cb
           each post in posts
             .post
               .post-header
-                a(href="") #{post.title}
-              .post-body
+                a.title-a(href="/detail/" + post._id) #{post.title}
+                - if (user) {
+                  span.admin-operate
+                    a.edit.ex-badge(href='/admin/post/edit/' + post._id) 编辑
+                    a.del.ex-badge(href="") 删除
+                - }
               .post-footer
+                div.tags 标签:
+                  each tag in post.tags
+                    a.ex-badge.tag-a(href="") #{tag}
+                div.time 发表时间：2015-12-2 07:21:23
+                div.username 作者：大表哥
