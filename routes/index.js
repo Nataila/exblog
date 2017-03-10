@@ -23,11 +23,18 @@ function checkNotLogin(req, res, next) {
   next();
 }
 
+function getTagname(text) {
+  let a = models.TagsModel.findOne({'_id': text}, function (doc) {
+    return doc.name;
+  });
+  return a.then((name) => name);
+}
 
 router.get('/', function(req, res, next) {
   let result = {'title': '大表哥'};
-  let posts = models.PostModel.find();
+  let posts = models.PostModel.find().populate('posts.tags');
   posts.then((posts) => {
+    console.log(getTagname(posts[0].tags[0]));
     result.user = req.session.user;
     result.posts = posts;
     res.render('index', result);
@@ -52,7 +59,6 @@ router.post('/login', function (req, res, next) {
       req.flash('error', '用户不存在');
       return res.redirect('/login');
     }
-    console.log(user.password, password);
     if (user.password !== password) {
       req.flash('error', '密码错误');
       return res.redirect('/login');

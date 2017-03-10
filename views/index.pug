@@ -24,7 +24,7 @@ block content
                 - if (user) {
                   span.admin-operate
                     a.edit.ex-badge(href='/admin/post/edit/' + post._id) 编辑
-                    a.del.ex-badge(href="") 删除
+                    a.del.ex-badge(href="/admin/post/del/" + post._id) 删除
                 - }
               .post-footer
                 div.tags 标签:

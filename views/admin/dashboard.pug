@@ -1,2 +1,28 @@
 extends ../base
 block content
+  .dashboard
+    .col-md-6
+      .panel.panel-default
+        .panel-heading 文章管理
+          a.ex-badge.new-post-a.btn-add-post(href="/admin/post/new") 发表文章
+        .panel-body
+          .admin-post-list
+            each post in posts
+              .admin-post-item
+                a(href='/post/detail/' + post._id) #{post.title}
+                .admin-operate
+                  a.edit.ex-badge(href='/admin/post/edit/' + post._id) 编辑
+                  a.del.ex-badge(href="/admin/post/del/" + post._id) 删除
+    .col-md-6
+      .panel.panel-default
+        .panel-heading 标签管理
+        .panel-body
+          .admin-tags-list
+            each tag in tags
+              span.admin-tag #{tag.name}
+          .admin-add-tag-form
+            form.form-inline(method="post" action="admin/tag/new")
+              .form-group
+                label.sr-only(for="tags")
+                input.form-control(type='text' placeholder="添加新标签" name="name")
+              button.btn.btn-default(type="submit") 添加标签

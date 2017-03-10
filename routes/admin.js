@@ -1,17 +1,31 @@
 import express from 'express';
+import async from 'async';
 import models from '../models';
 import auth from '../auth';
-
 var router = express.Router();
 
 router.get('/', auth.login_required, (req, res, next) => {
-  res.render('admin/dashboard', {});
+  let ctx = {};
+  async.parallel({
+    posts: cb => {
+      models.PostModel.find({}, (err, posts) => {
+        cb(null, posts);
+      });
+    },
+    tags: cb => {
+      models.TagsModel.find({}, (err, tags) => {
+        cb(null, tags);
+      });
+    }
+  }, (err, results) => {
+    res.render('admin/dashboard', results);
+  });
 });
 
 router.get('/post/new', auth.login_required, (req, res) => {
-  models.TagsModel.find({}, (err, doc) => {
+  models.TagsModel.find({}, (err, tags) => {
     res.render('admin/add-post', {
-      tags: doc
+      tags: tags
     });
   });
 });
@@ -23,6 +37,21 @@ router.get('/post/edit/:p_id', auth.login_required, (req, res) => {
       type: 'edit',
       post: post
     });
+  });
+});
+
+router.get('/post/del/:p_id', auth.login_required, (req, res) => {
+  let p_id = req.params.p_id;
+  models.PostModel.remove({'_id': p_id}, (err, post) => {
+    res.redirect('/admin');
+  });
+});
+
+router.post('/tag/new', auth.login_required, (req, res) => {
+  let name = req.body.name;
+  let new_tag = new models.TagsModel({'name': name});
+  new_tag.save((err, tag) => {
+    res.redirect('/admin');
   });
 });
 

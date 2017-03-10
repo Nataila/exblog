@@ -37,10 +37,8 @@ block content
           label.col-sm-1.control-label 标签
           .col-sm-3
             select.form-control(name="tags" multiple)
-              option 1
-              option 2
-              option 3
-              option 4
+              each tag in tags
+                option(value=tag._id) #{tag.name}
         - if (type)
           input(type="hidden" name="type" value="edit")
           input(type="hidden" name="p_id" value=post._id)
@@ -49,8 +47,6 @@ block content
         .form-group
           .col-sm-1.col-sm-offset-1
             button.btn.btn-default.post-sub(type="submit") 提交
-          .col-sm-1
-            span.btn.btn-primary 标签管理
 
   script.
     var testEditor;

@@ -2,6 +2,7 @@ html, body
   margin: 0
   padding: 0
 
+$baseColor: #FF5E52
 //body
 //  background: url('/images/bg.jpg') no-repeat
 //  background-size: cover
@@ -17,3 +18,41 @@ html, body
 .login-main
   margin-top: 10%
 
+.dashboard
+  .panel-heading
+    font-size: 16px
+  .btn-add-post
+    float: right
+    padding: 0 10px
+  margin-top: 80px
+  .admin-post-list
+    padding-left: 10px
+    .admin-post-item
+      padding: 5px 0
+      + .admin-post-item
+        border-top: 1px solid #eee
+      a
+        color: #000
+        font-size: 14px
+        transition: all .3s
+        &:hover
+          color: $baseColor
+      .admin-operate
+        display: inine-block
+        float: right
+        margin-right: 30px
+        a
+          margin-right: 10px
+          font-size: 12px
+          &:hover
+            color: #FFF
+  .admin-tags-list
+    span.admin-tag
+      padding: 5px 10px
+      color: #FFF
+      background: $baseColor
+      border-radius: 5px
+      + .admin-tag
+        margin-left: 10px
+  .admin-add-tag-form
+    margin-top: 20px
