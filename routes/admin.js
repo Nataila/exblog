@@ -5,7 +5,6 @@ import auth from '../auth';
 var router = express.Router();
 
 router.get('/', auth.login_required, (req, res, next) => {
-  let ctx = {};
   async.parallel({
     posts: cb => {
       models.PostModel.find({}, (err, posts) => {
@@ -32,11 +31,19 @@ router.get('/post/new', auth.login_required, (req, res) => {
 
 router.get('/post/edit/:p_id', auth.login_required, (req, res) => {
   let p_id = req.params.p_id;
-  models.PostModel.findOne({'_id': p_id}, (err, post) => {
-    res.render('admin/add-post', {
-      type: 'edit',
-      post: post
-    });
+  async.parallel({
+    post: cb => {
+      models.PostModel.findOne({'_id': p_id}, (err, post) => {
+        cb(null, post);
+      });
+    },
+    tags: cb => {
+      models.TagsModel.find({}, (err, tags) => {
+        cb(null, tags);
+      });
+    }
+  }, (err, results) => {
+    res.render('admin/add-post', results);
   });
 });
 

@@ -38,7 +38,7 @@ block content
           .col-sm-3
             select.form-control(name="tags" multiple)
               each tag in tags
-                option(value=tag._id) #{tag.name}
+                option #{tag.name}
         - if (type)
           input(type="hidden" name="type" value="edit")
           input(type="hidden" name="p_id" value=post._id)
