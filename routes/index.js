@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import express from 'express';
 import models from '../models';
 import config from '../config';
+import async from 'async';
 
 var router = express.Router();
 
@@ -23,22 +24,54 @@ function checkNotLogin(req, res, next) {
   next();
 }
 
-function getTagname(text) {
-  let a = models.TagsModel.findOne({'_id': text}, function (doc) {
-    return doc.name;
+function getTagname(text, cb) {
+  models.TagsModel.findOne({'_id': text}, function (err, doc) {
+    return cb(doc);
   });
-  return a.then((name) => name);
 }
 
 router.get('/', function(req, res, next) {
-  let result = {'title': '大表哥'};
-  let posts = models.PostModel.find().populate('posts.tags');
-  posts.then((posts) => {
-    console.log(getTagname(posts[0].tags[0]));
+  let page = req.query.page || 1;
+  let startNum = page===1 ? 0 : (page-1) * config.pageCount;
+  let getPosts =  new Promise((resolve, reject) => {
+    models.PostModel.find()
+      .skip(startNum)
+      .limit(config.pageCount)
+      .exec(function (err, doc) {
+        resolve(doc);
+      });
+  });
+
+  let getTotalCount = new Promise(resolve => {
+    models.PostModel.find().count().then((err, count) => {
+      resolve(count);
+    });
+  });
+
+  async.parallel({
+    posts: (cb) => {
+      models.PostModel.find()
+        .skip(startNum)
+        .limit(config.pageCount)
+        .exec(function (err, doc) {
+          cb(null, doc);
+        });
+    },
+      totalCount: (cb) => {
+        models.PostModel.find().count().then((count) => {
+          cb(null, count);
+        });
+    }
+  }, (err, result) => {
     result.user = req.session.user;
-    result.posts = posts;
+    result.title = '大表哥';
     res.render('index', result);
   });
+  // getPosts.then((posts) => {
+  //   result.user = req.session.user;
+  //   result.posts = posts;
+  //   res.render('index', result);
+  // });
 });
 
 router.get('/login', checkNotLogin);

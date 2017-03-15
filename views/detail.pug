@@ -22,7 +22,7 @@ block content
           li 发表时间：#{post.created_at}
           li 分类:
             each tag in post.tags
-             | #{tag}
+              span= tag.name
       #test-editormd-view
         textarea(style="display:none" name="test-editormd-markdown-doc")
       .markdown-container= post.markdown

@@ -2,7 +2,13 @@ import express from 'express';
 import async from 'async';
 import models from '../models';
 import auth from '../auth';
+import mongoose from 'mongoose';
+import pug from 'pug';
 var router = express.Router();
+
+pug.filters.testfilter = function (text) {
+  console.log(text);
+};
 
 router.get('/', auth.login_required, (req, res, next) => {
   let ctx = {};
@@ -32,12 +38,30 @@ router.get('/post/new', auth.login_required, (req, res) => {
 
 router.get('/post/edit/:p_id', auth.login_required, (req, res) => {
   let p_id = req.params.p_id;
-  models.PostModel.findOne({'_id': p_id}, (err, post) => {
-    res.render('admin/add-post', {
-      type: 'edit',
-      post: post
+  let getTags = new Promise((resolve, reject) => {
+    models.TagsModel.find({}, (err, doc) => {
+      resolve(doc);
     });
   });
+  let getPosts = new Promise((resolve, reject) => {
+    models.PostModel.findOne({'_id': p_id}, (err, doc) => {
+      resolve(doc);
+    });
+  });
+  // Promise.all({'posts': getPosts, 'tags': getTags}).then(result => {
+  Promise.all([getPosts, getTags]).then(result => {
+    res.render('admin/add-post', {
+      post: result[0],
+      tags: result[1],
+      ptype: 'edit'
+    });
+  })
+  //models.PostModel.findOne({'_id': p_id}, (err, post) => {
+  //  res.render('admin/add-post', {
+  //    type: 'edit',
+  //    post: post
+  //  });
+  //});
 });
 
 router.get('/post/del/:p_id', auth.login_required, (req, res) => {
@@ -55,15 +79,18 @@ router.post('/tag/new', auth.login_required, (req, res) => {
   });
 });
 
-router.post('/post', auth.login_required,  (req, res) => {
-  let {title, markdown, tags, type} = req.body;
-  let post_d = {
-    title: title,
-    markdown: markdown,
-    tags: tags
-  };
+var getTags = tags => {
+  return new Promise((resolve, reject) => {
+    models.TagsModel.find({'_id': {$in: tags}},{'name': 1}, (err, doc) => {
+      resolve(doc);
+    });
+  });
+};
+
+var CreateOrUpdate = (req, post_d) => {
+  let ptype = req.body.ptype;
   let save_promise;
-  if (type === 'new') {
+  if (ptype === 'new') {
     save_promise = new Promise((resolve, reject) => {
       let new_post = new models.PostModel(post_d);
       new_post.save((err, post) => {
@@ -80,12 +107,25 @@ router.post('/post', auth.login_required,  (req, res) => {
         if (err) {
           reject(new Error('error'));
         }
-        resolve(post);
+        resolve({'_id': p_id});
       });
     });
   }
-  save_promise.then((post) => {
-    return res.redirect(`/post/detail/${post._id}`);
+  return save_promise;
+};
+
+router.post('/post', auth.login_required,  (req, res) => {
+  let {title, markdown, tags, ptype} = req.body;
+  let post_d = {
+    title: title,
+    markdown: markdown,
+    tags: tags
+  };
+  getTags(tags).then(tagsDocs=> {
+    post_d.tags = tagsDocs;
+    CreateOrUpdate(req, post_d).then((post) => {
+      return res.redirect(`/post/detail/${post._id}`);
+    });
   });
 });
 

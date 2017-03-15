@@ -34,7 +34,7 @@ const PostSchema = new mongoose.Schema({
   title: {type: String, required: true},
   markdown: {type: String, required: true},
   // tags: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tags'}],
-  tags: [{type: String}],
+  tags: [],
   created_at: {type: Date, default: Date.now}
 });
 
