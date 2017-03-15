@@ -11,7 +11,6 @@ pug.filters.testfilter = function (text) {
 };
 
 router.get('/', auth.login_required, (req, res, next) => {
-  let ctx = {};
   async.parallel({
     posts: cb => {
       models.PostModel.find({}, (err, posts) => {
@@ -38,15 +37,19 @@ router.get('/post/new', auth.login_required, (req, res) => {
 
 router.get('/post/edit/:p_id', auth.login_required, (req, res) => {
   let p_id = req.params.p_id;
-  let getTags = new Promise((resolve, reject) => {
-    models.TagsModel.find({}, (err, doc) => {
-      resolve(doc);
-    });
-  });
-  let getPosts = new Promise((resolve, reject) => {
-    models.PostModel.findOne({'_id': p_id}, (err, doc) => {
-      resolve(doc);
-    });
+  async.parallel({
+    post: cb => {
+      models.PostModel.findOne({'_id': p_id}, (err, post) => {
+        cb(null, post);
+      });
+    },
+    tags: cb => {
+      models.TagsModel.find({}, (err, tags) => {
+        cb(null, tags);
+      });
+    }
+  }, (err, results) => {
+    res.render('admin/add-post', results);
   });
   // Promise.all({'posts': getPosts, 'tags': getTags}).then(result => {
   Promise.all([getPosts, getTags]).then(result => {

@@ -24,12 +24,6 @@ function checkNotLogin(req, res, next) {
   next();
 }
 
-function getTagname(text, cb) {
-  models.TagsModel.findOne({'_id': text}, function (err, doc) {
-    return cb(doc);
-  });
-}
-
 router.get('/', function(req, res, next) {
   let page = req.query.page || 1;
   let startNum = page===1 ? 0 : (page-1) * config.pageCount;
