@@ -19,10 +19,11 @@ block content
       .detail-header
         h2.tc= post.title
         ul.post-meta
-          li 发表时间：#{post.created_at}
+          li 发表时间：
+            span= dateFormat(post.created_at)
           li 分类:
             each tag in post.tags
-              span= tag.name
+              a.ex-badge.tag-a(href="/?tag="+tag._id) #{tag.name}
       #test-editormd-view
         textarea(style="display:none" name="test-editormd-markdown-doc")
       .markdown-container= post.markdown

@@ -3,6 +3,8 @@ import express from 'express';
 import models from '../models';
 import config from '../config';
 import async from 'async';
+import utils from '../utils';
+import mongoose from 'mongoose';
 
 var router = express.Router();
 
@@ -24,48 +26,46 @@ function checkNotLogin(req, res, next) {
   next();
 }
 
+
 router.get('/', function(req, res, next) {
+  let mquery = {};
   let page = req.query.page || 1;
+  let qtag = req.query.tag;
+  let search = req.query.search;
+  if (qtag) {
+    mquery["tags._id"] = mongoose.Types.ObjectId(qtag);
+  }
+  if (search) {
+    mquery.$or = [
+      {'title': {$regex: search}},
+      {'markdown':{$regex: search}}
+    ];
+  }
   let startNum = page===1 ? 0 : (page-1) * config.pageCount;
-  let getPosts =  new Promise((resolve, reject) => {
-    models.PostModel.find()
-      .skip(startNum)
-      .limit(config.pageCount)
-      .exec(function (err, doc) {
-        resolve(doc);
-      });
-  });
-
-  let getTotalCount = new Promise(resolve => {
-    models.PostModel.find().count().then((err, count) => {
-      resolve(count);
-    });
-  });
-
   async.parallel({
     posts: (cb) => {
-      models.PostModel.find()
+      models.PostModel.find(mquery)
+        .sort({'created_at': -1})
         .skip(startNum)
         .limit(config.pageCount)
         .exec(function (err, doc) {
           cb(null, doc);
         });
     },
-      totalCount: (cb) => {
-        models.PostModel.find().count().then((count) => {
-          cb(null, count);
-        });
+    totalCount: (cb) => {
+      models.PostModel.find().count().then((count) => {
+        cb(null, count);
+      });
     }
   }, (err, result) => {
+    result.prevHref = req.url.replace(/page(\d+)/, `page=${page-1}`);
+    result.nextHref = req.url.replace(/page(\d+)/, `page=${page+1}`);
+    result.dateFormat = utils.dateFormat;
     result.user = req.session.user;
+    result.nowPage = page;
     result.title = '大表哥';
     res.render('index', result);
   });
-  // getPosts.then((posts) => {
-  //   result.user = req.session.user;
-  //   result.posts = posts;
-  //   res.render('index', result);
-  // });
 });
 
 router.get('/login', checkNotLogin);
@@ -130,3 +130,6 @@ router.post('/login', function (req, res, next) {
 // });
 
 module.exports = router;
+let dateFormat = function (text) {
+  return moment(text).format('Y-MM-DD HH:MM:SS');
+};

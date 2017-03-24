@@ -49,22 +49,9 @@ router.get('/post/edit/:p_id', auth.login_required, (req, res) => {
       });
     }
   }, (err, results) => {
+    results.ptype = 'edit';
     res.render('admin/add-post', results);
   });
-  // Promise.all({'posts': getPosts, 'tags': getTags}).then(result => {
-  Promise.all([getPosts, getTags]).then(result => {
-    res.render('admin/add-post', {
-      post: result[0],
-      tags: result[1],
-      ptype: 'edit'
-    });
-  })
-  //models.PostModel.findOne({'_id': p_id}, (err, post) => {
-  //  res.render('admin/add-post', {
-  //    type: 'edit',
-  //    post: post
-  //  });
-  //});
 });
 
 router.get('/post/del/:p_id', auth.login_required, (req, res) => {

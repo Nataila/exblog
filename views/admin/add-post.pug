@@ -34,15 +34,20 @@ block content
               - else
                 textarea(style="display:none;" name="markdown")
         .form-group
-          - var tagIdList = post.tags.map(function (v) {return v._id.toString()});
+          - if (ptype)
+            - var tagIdList = post.tags.map(function (v) {return v._id.toString()});
           label.col-sm-1.control-label 标签
           .col-sm-3
             select.form-control(name="tags" multiple)
               each tag in tags
-                - if (tagIdList.indexOf(tag._id.toString()) < 0)
-                  option(value=tag._id) #{tag.name}
+                - if (ptype)
+                  - if (tagIdList.indexOf(tag._id.toString()) < 0)
+                    option(value=tag._id) #{tag.name}
+                  - else
+                    option(value=tag._id selected) #{tag.name}
                 - else
-                  option(value=tag._id selected) #{tag.name}
+                    option(value=tag._id) #{tag.name}
+
         - if (ptype)
           input(type="hidden" name="ptype" value="edit")
           input(type="hidden" name="p_id" value=post._id)
